@@ -116,7 +116,7 @@ export default function Home({ comics }: ComicsProps) {
                   <CardMedia
                     className={classes.cardMedia}
                     image={
-                      comic.thumbnail.path + '.' + comic.thumbnail.extension
+                      comic.thumbnail?.path + '.' + comic.thumbnail?.extension
                     }
                     title={comic.title}
                   />

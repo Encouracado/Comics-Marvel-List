@@ -81,7 +81,9 @@ export default function Comics() {
       <img
         className={classes.image}
         src={
-          selectedComic.thumbnail.path + '.' + selectedComic.thumbnail.extension
+          selectedComic.thumbnail?.path +
+          '.' +
+          selectedComic.thumbnail?.extension
         }
       />
 
