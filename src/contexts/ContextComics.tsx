@@ -3,12 +3,12 @@ import { createContext, useState, ReactNode } from 'react';
 export interface Comic {
   id: number;
   title: string;
-  variantDescription: string;
+  variantDescription?: string;
   description: string;
   modified: Date;
-  isbn: string;
+  isbn?: string;
   series: string;
-  thumbnail: {
+  thumbnail?: {
     path: string;
     extension: string;
   };
