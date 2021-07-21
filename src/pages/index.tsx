@@ -7,8 +7,7 @@ import md5 from 'md5';
 import { Comic } from '../contexts/ContextComics';
 import { ComicContext } from '../contexts/ContextComics';
 import { Footer } from '../components/layout/Footer';
-
-import { makeStyles } from '@material-ui/core/styles';
+import { useStyles } from '../hooks/indexStyles';
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AppBar from '@material-ui/core/AppBar';
@@ -28,40 +27,6 @@ interface ComicsProps {
   comics: Comic[];
 }
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  appBar: {
-    backgroundColor: '#04d361',
-  },
-  bottonLearnMore: {
-    color: '#04d361',
-  },
-}));
-
 export default function Home({ comics }: ComicsProps) {
   const { openDescriptionComic } = useContext(ComicContext);
   const router = useRouter();
@@ -69,7 +34,7 @@ export default function Home({ comics }: ComicsProps) {
 
   function showDescriptionComic(comic: Comic) {
     openDescriptionComic(comic);
-    router.push(`/Comics/${comic.id}`);
+    router.push(`/comics/${comic.id}`);
   }
 
   return (
@@ -116,7 +81,8 @@ export default function Home({ comics }: ComicsProps) {
                   <CardMedia
                     className={classes.cardMedia}
                     image={
-                      comic.thumbnail?.path + '.' + comic.thumbnail?.extension
+                      // prettier-ignore
+                      comic.thumbnail.path=== 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available' ? ('404Error.jpg') : (comic.thumbnail?.path + '.' +  comic.thumbnail?.extension)
                     }
                     title={comic.title}
                   />
@@ -189,6 +155,6 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       comics,
     },
-    revalidate: 60 * 60 * 8,
+    revalidate: 60 * 60 * 8, //one day
   };
 };

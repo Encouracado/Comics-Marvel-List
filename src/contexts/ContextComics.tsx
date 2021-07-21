@@ -19,7 +19,7 @@ interface creator {
   name: string;
 }
 
-interface ComicList {
+export interface ComicList {
   comicList: Comic[];
   selectedComic: Comic;
   openDescriptionComic: (comic: Comic) => void;

@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 
-import { ComicContext } from '../../contexts/ContextComics';
 import { Footer } from '../../components/layout/Footer';
-
-import { makeStyles } from '@material-ui/core/styles';
+import { useStyles } from '../../hooks/slugStyles';
+import { ComicList } from '../../contexts/ContextComics';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -14,60 +13,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import api from '../../services/api';
+import md5 from 'md5';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
-  image: {
-    backgroundRepeat: 'no-repeat',
-    backgroundColor:
-      theme.palette.type === 'light'
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    height: '100%',
-    display: 'flex',
-    flex: '30%',
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    marginBottom: '30px',
-    backgroundColor: theme.palette.secondary.main,
-  },
-  description: {
-    marginTop: '30px',
-    fontSize: '16px',
-  },
-  series: {
-    marginTop: '7px',
-    fontWeight: 'bold',
-    fontSize: '12px',
-  },
-  creators: {
-    marginTop: '7px',
-    fontWeight: 'bold',
-    fontSize: '12px',
-    color: theme.palette.secondary.main,
-  },
-  isbn: {
-    marginTop: '12px',
-    fontSize: '10px',
-  },
-  buttonBack: {
-    marginTop: '12px',
-    marginBottom: '0%',
-  },
-}));
-
-export default function Comics() {
-  const { selectedComic } = useContext(ComicContext);
+export default function Comics({ selectedComic }: ComicList) {
   const classes = useStyles();
   const router = useRouter();
   function BackToHomePage() {
@@ -81,9 +31,8 @@ export default function Comics() {
       <img
         className={classes.image}
         src={
-          selectedComic.thumbnail?.path +
-          '.' +
-          selectedComic.thumbnail?.extension
+          // prettier-ignore
+          selectedComic.thumbnail.path === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available' ? ('http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available') : (selectedComic.thumbnail.path + '.' +  selectedComic.thumbnail.extension)
         }
       />
 
@@ -127,3 +76,52 @@ export default function Comics() {
     </Grid>
   );
 }
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const publicKey = '4da92f9ba2c7b05eaf1e088dbffe0ce7';
+
+  const privateKey = '4d89f732f2070f767cd167c90974c9722f2c6e19';
+
+  let ts = Number(new Date());
+
+  let hashKeys = md5(ts + privateKey + publicKey);
+
+  const { slug } = ctx.params;
+
+  const { data } = await api.get(`comics/${slug}`, {
+    params: {
+      apikey: publicKey,
+      ts,
+      hash: hashKeys,
+    },
+  });
+
+  const selectedComic = {
+    id: data.data.results[0].id,
+    title: data.data.results[0].title,
+    variantDescription: data.data.results[0].variantDescription,
+    description: data.data.results[0].description,
+    modified: data.data.results[0].modified,
+    isbn: data.data.results[0].isbn,
+    series: data.data.results[0].series.name,
+    thumbnail: {
+      path: data.data.results[0].thumbnail.path,
+      extension: data.data.results[0].thumbnail.extension,
+    },
+    creators: data.data.results[0].creators.items,
+  };
+
+  return {
+    props: {
+      selectedComic,
+    },
+    revalidate: 60 * 60 * 8, // one day
+  };
+};
