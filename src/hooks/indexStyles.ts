@@ -27,10 +27,10 @@ export const useStyles = makeStyles((theme) => ({
       flexGrow: 1,
     },
     appBar: {
-      backgroundColor: '#04d361',
+      background: theme.palette.primary.main,
     },
     bottonLearnMore: {
-      color: '#04d361',
+      color: theme.palette.primary.main,
     },
   }));
   
