@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles((theme) => ({
     root: {
       height: '100vh',
+      
     },
     image: {
       backgroundRepeat: 'no-repeat',
@@ -16,7 +17,19 @@ export const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flex: '30%',
     },
+    imageHidden: {
+      position: 'absolute',
+      width: '1px',
+      height: '1px',
+      padding: '0',
+      margin: '-1px',
+      overflow: 'hidden',
+      clip: 'rect(0, 0, 0, 0)',
+      whiteSpace: 'nowrap',
+      borderWidth: '0',
+    },
     paper: {
+      height:'100vh',
       margin: theme.spacing(8, 4),
       display: 'flex',
       flexDirection: 'column',

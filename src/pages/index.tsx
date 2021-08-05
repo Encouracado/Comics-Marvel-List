@@ -7,7 +7,7 @@ import md5 from 'md5';
 import { Comic } from '../contexts/ContextComics';
 import { ComicContext } from '../contexts/ContextComics';
 import { Footer } from '../components/layout/Footer';
-import { useStyles } from '../hooks/indexStyles';
+import { useStyles } from '../createStyles/indexStyles';
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AppBar from '@material-ui/core/AppBar';
@@ -77,12 +77,12 @@ export default function Home({ comics }: ComicsProps) {
           <Grid container spacing={4}>
             {comics.map((comic) => (
               <Grid item key={comic.id} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
+                <Card className={classes.card} key={comic.id}>
                   <CardMedia
                     className={classes.cardMedia}
                     image={
-                      // prettier-ignore
-                      comic.thumbnail.path=== 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available' ? ('404Error.jpg') : (comic.thumbnail?.path + '.' +  comic.thumbnail?.extension)
+                      //prettier-ignore
+                      comic.thumbnail.path ==='http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available'? ('marvel.jpg'):(comic.thumbnail?.path + '.' + comic.thumbnail?.extension)
                     }
                     title={comic.title}
                   />
@@ -125,7 +125,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const response = await api.get('comics', {
     params: {
-      limit: 40,
+      limit: 100,
       apikey: publicKey,
       ts,
       hash: hashKeys,

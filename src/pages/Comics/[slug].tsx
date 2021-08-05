@@ -1,8 +1,9 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { Footer } from '../../components/layout/Footer';
-import { useStyles } from '../../hooks/slugStyles';
+import { useStyles } from '../../createStyles/slugStyles';
 import { ComicList } from '../../contexts/ContextComics';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -16,6 +17,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import api from '../../services/api';
 import md5 from 'md5';
+import { CardMedia } from '@material-ui/core';
 
 export default function Comics({ selectedComic }: ComicList) {
   const classes = useStyles();
@@ -25,14 +27,20 @@ export default function Comics({ selectedComic }: ComicList) {
   }
 
   return (
-    <Grid container component="main" className={classes.root}>
+    <Grid
+      key={selectedComic.id}
+      container
+      component="main"
+      className={classes.root}
+    >
       <CssBaseline />
 
-      <img
+      <CardMedia
+        // prettier-ignore
         className={classes.image}
-        src={
+        image={
           // prettier-ignore
-          selectedComic.thumbnail.path === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available' ? ('http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available') : (selectedComic.thumbnail.path + '.' +  selectedComic.thumbnail.extension)
+          selectedComic.thumbnail.path + '.' + selectedComic.thumbnail.extension
         }
       />
 

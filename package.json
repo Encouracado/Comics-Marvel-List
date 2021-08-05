@@ -1,10 +1,9 @@
 {
-  "name": "next-boilerplate",
+  "name": "comicsmarvellist",
   "version": "1.0.0",
   "author": {
-    "name": "Fábrica de Código",
-    "email": "contato@fabricadecodigo.com",
-    "url": "https://www.fabricadecodigo.com"
+    "name": "Cleison Alexandre",
+    "email": "cleison.alexandre.azevedo@gmail.com"
   },
   "license": "MIT",
   "private": true,
